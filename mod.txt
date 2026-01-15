@@ -1,0 +1,38 @@
+{
+    "name": "Hakuu's Crosshair",
+    "description": "Modern crosshair with hit markers, laser-follow aiming, target-based colors, and customizable appearance",
+    "author": "Hakuu",
+    "version": "1.0.0",
+    "blt_version": 2,
+    "updates": [],
+    "dependencies": [],
+    "hooks": [
+        {
+            "hook_id": "lib/managers/menumanager",
+            "script_path": "crosshair_menu.lua"
+        },
+        {
+            "hook_id": "lib/managers/hudmanagerpd2",
+            "script_path": "crosshair_mod.lua"
+        },
+        {
+            "hook_id": "lib/units/enemies/cop/copdamage",
+            "script_path": "hooks/crosshair_damage_hooks.lua"
+        },
+        {
+            "hook_id": "lib/units/civilians/civiliandamage",
+            "script_path": "hooks/crosshair_damage_hooks.lua"
+        }
+    ],
+    "keybinds": [
+        {
+            "keybind_id": "crosshair_toggle",
+            "name": "Toggle Crosshair",
+            "description": "Toggle custom crosshair on/off",
+            "script_path": "keybinds.lua",
+            "run_in_menu": false,
+            "run_in_game": true
+        }
+    ],
+    "persist_scripts": []
+}
