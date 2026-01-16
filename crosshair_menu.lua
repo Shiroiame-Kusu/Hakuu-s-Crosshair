@@ -22,7 +22,7 @@ CrosshairMod.settings.hitmarker = CrosshairMod.settings.hitmarker or { enabled =
 CrosshairMod.settings.dynamic = CrosshairMod.settings.dynamic or { enabled = true, expansion_amount = 6, recovery_speed = 15 }
 
 -- Crosshair mode conversion functions (for MultipleChoice)
-local crosshair_mode_values = { "auto", "dot", "cross" }
+local crosshair_mode_values = { "auto", "dot", "cross", "cross_and_dot" }
 local function mode_to_index(mode)
     for i, v in ipairs(crosshair_mode_values) do
         if v == mode then return i end
@@ -62,10 +62,11 @@ Hooks:Add("LocalizationManagerPostInit", "ModernCrosshair_Localization", functio
             ["crosshair_enabled"] = "Enable Crosshair",
             ["crosshair_enabled_desc"] = "Toggle custom crosshair on/off",
             ["crosshair_mode"] = "Crosshair Mode",
-            ["crosshair_mode_desc"] = "Auto: Hip-fire cross/Stealth-interact-melee dot | Dot: Always dot | Cross: Always cross",
+            ["crosshair_mode_desc"] = "Auto: Hip-fire cross/Stealth-interact-melee dot | Dot: Always dot | Cross: Always cross | Cross+Dot: Cross with center dot",
             ["crosshair_mode_auto"] = "Auto",
             ["crosshair_mode_dot"] = "Dot",
             ["crosshair_mode_cross"] = "Cross",
+            ["crosshair_mode_cross_and_dot"] = "Cross + Dot",
             ["crosshair_hide_ads"] = "Hide When ADS",
             ["crosshair_hide_ads_desc"] = "Hide crosshair when using iron sight/scope",
             ["crosshair_sway_enabled"] = "Laser Follow",
@@ -109,13 +110,13 @@ Hooks:Add("MenuManagerPopulateCustomMenus", "ModernCrosshair_PopulateMenus", fun
         priority = 100,
     })
     
-    -- Crosshair mode selection (auto/dot/cross)
+    -- Crosshair mode selection (auto/dot/cross/cross_and_dot)
     MenuHelper:AddMultipleChoice({
         id = "crosshair_mode",
         title = "crosshair_mode",
         desc = "crosshair_mode_desc",
         callback = "crosshair_set_mode",
-        items = { "crosshair_mode_auto", "crosshair_mode_dot", "crosshair_mode_cross" },
+        items = { "crosshair_mode_auto", "crosshair_mode_dot", "crosshair_mode_cross", "crosshair_mode_cross_and_dot" },
         value = mode_to_index(CrosshairMod.settings.style.crosshair_mode),
         menu_id = "crosshair_mod_menu",
         priority = 95,

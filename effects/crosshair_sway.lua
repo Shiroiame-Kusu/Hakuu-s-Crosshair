@@ -82,6 +82,13 @@ function CrosshairMod:is_holding_aimable_weapon()
 end
 
 function CrosshairMod:get_laser_hit_point()
+    -- Check if we should update raycast (throttling)
+    local perf = self._perf
+    if perf and not self:should_update_raycast() then
+        -- Return cached result
+        return perf.cached_laser_hit
+    end
+    
     -- Initialize slot mask
     self:init_laser_slotmask()
     if not self._laser_slotmask then
@@ -90,6 +97,7 @@ function CrosshairMod:get_laser_hit_point()
     
     local from_pos, direction = self:get_weapon_fire_ray()
     if not from_pos or not direction then
+        if perf then perf.cached_laser_hit = nil end
         return nil
     end
     
@@ -100,12 +108,20 @@ function CrosshairMod:get_laser_hit_point()
     -- Perform raycast
     local ray = World:raycast("ray", from_pos, to_pos, "slot_mask", self._laser_slotmask)
     
+    local hit_point
     if ray and ray.position then
-        return ray.position
+        hit_point = ray.position
+    else
+        -- If nothing hit, return point at max distance
+        hit_point = to_pos
     end
     
-    -- If nothing hit, return point at max distance
-    return to_pos
+    -- Cache result
+    if perf then
+        perf.cached_laser_hit = hit_point
+    end
+    
+    return hit_point
 end
 
 function CrosshairMod:world_to_screen_offset(world_pos)

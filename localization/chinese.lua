@@ -10,10 +10,11 @@ return {
     ["crosshair_enabled_desc"] = "开启/关闭自定义准星",
     
     ["crosshair_mode"] = "准星模式",
-    ["crosshair_mode_desc"] = "自动: 腰射十字/潜入互动近战圆点 | 圆点: 始终圆点 | 十字: 始终十字",
+    ["crosshair_mode_desc"] = "自动: 腰射十字/潜入互动近战圆点 | 圆点: 始终圆点 | 十字: 始终十字 | 十字+圆点: 带中心圆点的十字",
     ["crosshair_mode_auto"] = "自动",
     ["crosshair_mode_dot"] = "圆点",
     ["crosshair_mode_cross"] = "十字",
+    ["crosshair_mode_cross_and_dot"] = "十字+圆点",
     
     ["crosshair_hide_ads"] = "开镜隐藏准星",
     ["crosshair_hide_ads_desc"] = "使用机瞄/瞄准镜时隐藏准星",

@@ -379,6 +379,10 @@ function CrosshairMod:update_crosshair_visibility()
     elseif crosshair_mode == "cross" then
         -- 手动十字模式
         show_cross = true
+    elseif crosshair_mode == "cross_and_dot" then
+        -- 十字加圆点模式
+        show_dot = true
+        show_cross = true
     elseif crosshair_mode == "auto" then
         -- 自动模式：
         -- - 开镜不显示（如果 hide_when_ads）

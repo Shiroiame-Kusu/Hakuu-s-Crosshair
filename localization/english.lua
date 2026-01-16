@@ -10,10 +10,11 @@ return {
     ["crosshair_enabled_desc"] = "Toggle custom crosshair on/off",
     
     ["crosshair_mode"] = "Crosshair Mode",
-    ["crosshair_mode_desc"] = "Auto: Hip-fire cross/Stealth-interact-melee dot | Dot: Always dot | Cross: Always cross",
+    ["crosshair_mode_desc"] = "Auto: Hip-fire cross/Stealth-interact-melee dot | Dot: Always dot | Cross: Always cross | Cross+Dot: Cross with center dot",
     ["crosshair_mode_auto"] = "Auto",
     ["crosshair_mode_dot"] = "Dot",
     ["crosshair_mode_cross"] = "Cross",
+    ["crosshair_mode_cross_and_dot"] = "Cross + Dot",
     
     ["crosshair_hide_ads"] = "Hide When ADS",
     ["crosshair_hide_ads_desc"] = "Hide crosshair when using iron sight/scope",

@@ -102,6 +102,40 @@ CrosshairMod._state = CrosshairMod._state or {
     last_fire_time = 0,
 }
 
+-- ============================================================================
+-- Performance: FPS Tracking & Raycast Throttling
+-- ============================================================================
+
+CrosshairMod._perf = CrosshairMod._perf or {
+    -- FPS tracking
+    frame_times = {},           -- Ring buffer for frame times
+    frame_time_index = 1,       -- Current index in ring buffer
+    frame_time_count = 30,      -- Number of frames to average
+    avg_fps = 60,               -- Calculated average FPS
+    
+    -- Raycast throttling
+    frame_counter = 0,          -- Frame counter for throttling (resets periodically)
+    raycast_interval = 2,       -- Frames between raycasts (dynamic)
+    last_raycast_time = 0,      -- Last raycast timestamp
+    
+    -- Target cache
+    cached_target_type = "default",
+    cached_target_unit = nil,
+    
+    -- Laser hit cache
+    cached_laser_hit = nil,
+    cached_laser_offset = { x = 0, y = 0 },
+}
+
+-- Initialize frame times buffer (ensure it has correct size)
+if #CrosshairMod._perf.frame_times ~= CrosshairMod._perf.frame_time_count then
+    CrosshairMod._perf.frame_times = {}
+    for i = 1, CrosshairMod._perf.frame_time_count do
+        CrosshairMod._perf.frame_times[i] = 1/60
+    end
+    CrosshairMod._perf.frame_time_index = 1
+end
+
 -- Sway seeds for variation
 CrosshairMod._sway_seed_x = CrosshairMod._sway_seed_x or (math.random() * math.pi * 2)
 CrosshairMod._sway_seed_y = CrosshairMod._sway_seed_y or (math.random() * math.pi * 2)
