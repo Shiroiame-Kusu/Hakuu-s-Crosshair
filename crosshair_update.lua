@@ -28,16 +28,15 @@ function CrosshairMod:update_fps_tracking(dt)
     perf.avg_fps = perf.frame_time_count / total_time
     
     -- Adjust raycast interval based on FPS
-    -- High FPS (60+): interval = floor((fps / 60) * 3), scales with framerate
-    -- Medium FPS (30-60): every 2 frames (~15-30 raycasts/sec)
-    -- Low FPS (<30): every frame (responsive at low FPS)
-    -- This maintains ~20 raycasts/sec regardless of framerate
-    if perf.avg_fps >= 60 then
-        perf.raycast_interval = math.floor((perf.avg_fps / 60) * 3)
-    elseif perf.avg_fps >= 30 then
-        perf.raycast_interval = 2
+    -- For smooth crosshair movement, we need higher raycast frequency
+    -- High FPS (120+): every 2 frames (~60 raycasts/sec)
+    -- Medium FPS (60-120): every frame (~60-120 raycasts/sec)
+    -- Low FPS (<60): every frame (as responsive as possible)
+    -- This maintains smooth crosshair following at all frame rates
+    if perf.avg_fps >= 120 then
+        perf.raycast_interval = math.floor(perf.avg_fps / 60)  -- Every 2 frames
     else
-        perf.raycast_interval = 1
+        perf.raycast_interval = 1  -- Every frame for best responsiveness
     end
     
     -- Increment frame counter (reset to avoid overflow)

@@ -247,18 +247,27 @@ function CrosshairMod:update_sway(dt)
     
     local target_sway = self:calculate_sway()
     
-    -- Use faster return speed when not holding weapon
-    -- Use faster follow speed when holding weapon (0.4-0.5 is responsive)
-    local current_smoothing = smoothing * 3  -- Increase base speed
-    -- if current_smoothing > 0.6 then
-    --     current_smoothing = 0.6  -- Limit max value to prevent jitter
-    -- end
+    -- Frame-rate independent interpolation using exponential decay
+    -- Higher smoothing value = faster response (less smooth)
+    -- Lower smoothing value = slower response (more smooth)
+    -- Formula: lerp_factor = 1 - e^(-speed * dt)
+    -- This ensures consistent movement regardless of frame rate
+    
+    local base_speed = 20  -- Base interpolation speed (higher = faster response)
+    local speed_multiplier = smoothing * 10  -- Convert smoothing (0.05-0.3) to speed factor
+    local lerp_speed = base_speed * speed_multiplier
     
     if not self:is_holding_aimable_weapon() then
-        current_smoothing = 0.5  -- Faster return to center
+        lerp_speed = 30  -- Faster return to center when no weapon
     end
     
-    -- Smooth transition
-    self._state.sway_offset.x = self._state.sway_offset.x + (target_sway.x - self._state.sway_offset.x) * current_smoothing
-    self._state.sway_offset.y = self._state.sway_offset.y + (target_sway.y - self._state.sway_offset.y) * current_smoothing
+    -- Calculate frame-rate independent lerp factor
+    local lerp_factor = 1 - math.exp(-lerp_speed * dt)
+    
+    -- Clamp lerp factor to prevent overshooting
+    lerp_factor = math.max(0, math.min(1, lerp_factor))
+    
+    -- Smooth transition with frame-rate independent interpolation
+    self._state.sway_offset.x = self._state.sway_offset.x + (target_sway.x - self._state.sway_offset.x) * lerp_factor
+    self._state.sway_offset.y = self._state.sway_offset.y + (target_sway.y - self._state.sway_offset.y) * lerp_factor
 end

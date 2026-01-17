@@ -2,7 +2,7 @@
     "name": "Hakuu's Crosshair",
     "description": "Modern crosshair with hit markers, laser-follow aiming, target-based colors, and customizable appearance",
     "author": "Hakuu",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "blt_version": 2,
     "updates": [],
     "dependencies": [],

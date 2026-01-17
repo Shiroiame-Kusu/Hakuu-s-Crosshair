@@ -14,6 +14,7 @@ CrosshairMod.SLOT_MASKS = nil
 function CrosshairMod:init_slot_masks()
     if self.SLOT_MASKS then return end
     if not World then return end
+    if not managers.slot then return end
     
     -- Slot masks reference:
     -- Enemies: 12 (enemies), 33 (swat turrets)
@@ -29,6 +30,8 @@ function CrosshairMod:init_slot_masks()
         SENTRY = World:make_slot_mask(25),
         -- Only detect character type targets
         ALL_CHARACTERS = World:make_slot_mask(3, 12, 16, 21, 22, 25, 33),
+        -- Walls and geometry (use bullet_impact_targets which includes world geometry)
+        WORLD_GEOMETRY = managers.slot:get_mask("bullet_impact_targets"),
     }
 end
 
@@ -65,18 +68,6 @@ function CrosshairMod:get_target_type()
         return "default"
     end
     
-    -- First check for interactable objects (using built-in interaction manager)
-    if managers.interaction then
-        local active_interact = managers.interaction:active_unit()
-        if active_interact and alive(active_interact) then
-            -- Has interactable object, check what type
-            local interaction = active_interact:interaction()
-            if interaction then
-                return "interactable"
-            end
-        end
-    end
-    
     local camera = player:camera()
     if not camera then
         return "default"
@@ -85,10 +76,21 @@ function CrosshairMod:get_target_type()
     local from = camera:position()
     local to = from + camera:forward() * 3000
     
-    -- Raycast for character type targets
-    local ray = World:raycast("ray", from, to, "slot_mask", self.SLOT_MASKS.ALL_CHARACTERS)
+    -- First, do a raycast that includes world geometry to check for walls
+    -- This uses bullet_impact_targets which includes walls, floors, and characters
+    local ray = World:raycast("ray", from, to, "slot_mask", self.SLOT_MASKS.WORLD_GEOMETRY)
     
     if not ray or not ray.unit or not alive(ray.unit) then
+        -- No hit, check if there's an active interactable nearby (fallback)
+        if managers.interaction then
+            local active_interact = managers.interaction:active_unit()
+            if active_interact and alive(active_interact) then
+                local interaction = active_interact:interaction()
+                if interaction then
+                    return "interactable"
+                end
+            end
+        end
         return "default"
     end
     
@@ -120,6 +122,11 @@ function CrosshairMod:get_target_type()
     -- Check teammates
     if self:is_unit_in_slot(unit, self.SLOT_MASKS.TEAMMATES) then
         return "teammate"
+    end
+    
+    -- Check if the hit unit itself is interactable
+    if unit:interaction() then
+        return "interactable"
     end
     
     return "default"
