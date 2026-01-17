@@ -123,11 +123,13 @@ function CrosshairMod:update(t, dt)
     
     -- Update target color (with throttling)
     local target_type
-    if self:should_update_raycast() then
+    if self._perf and self:should_update_raycast() then
         target_type = self:get_target_type()
         self._perf.cached_target_type = target_type
-    else
+    elseif self._perf then
         target_type = self._perf.cached_target_type or "default"
+    else
+        target_type = self:get_target_type()
     end
     self._state.last_target_type = target_type
     self._state.target_color = self:get_color_for_target(target_type)

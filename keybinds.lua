@@ -11,7 +11,7 @@ if CrosshairMod and CrosshairMod.settings then
     end
     
     -- Show feedback message (bilingual)
-    if managers.hud and managers.hud.present_mid_text then
+    if managers.hud then
         local is_chinese = false
         if Idstring and SystemInfo then
             local sys_lang = SystemInfo:language()
@@ -25,10 +25,16 @@ if CrosshairMod and CrosshairMod.settings then
             status = is_chinese and "准星: 关闭" or "Crosshair: OFF"
         end
         
-        managers.hud:present_mid_text({
-            text = status,
-            time = 1.5
-        })
+        -- Try different HUD message methods for compatibility
+        if managers.hud.present_mid_text then
+            pcall(function()
+                managers.hud:present_mid_text({ text = status, time = 1.5 })
+            end)
+        elseif managers.hud.show_hint then
+            pcall(function()
+                managers.hud:show_hint({ text = status, time = 1.5 })
+            end)
+        end
     end
     
     -- Save the setting

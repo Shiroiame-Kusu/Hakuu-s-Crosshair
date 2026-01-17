@@ -212,6 +212,8 @@ function CrosshairMod:reset_to_defaults()
     self.settings = {
         enabled = true,
         style = {
+            crosshair_mode = "auto",
+            hide_when_ads = true,
             dot_when_hip = true,
             dot = { size = 4, alpha = 0.9 },
             crosshair = {
